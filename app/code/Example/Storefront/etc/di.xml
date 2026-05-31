@@ -10,4 +10,9 @@
                 type="Example\Storefront\Model\Greeter"/>
     <preference for="Example\Storefront\Api\ProductTrustBadgeInterface"
                 type="Example\Storefront\Model\ProductTrustBadgeProvider"/>
+    <type name="Example\Storefront\Block\ProductTrustBadge">
+        <arguments>
+            <argument name="trustBadge" xsi:type="object">Example\Storefront\Model\ProductTrustBadgeProvider</argument>
+        </arguments>
+    </type>
 </config>
