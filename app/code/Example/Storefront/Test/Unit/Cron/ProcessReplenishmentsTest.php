@@ -173,14 +173,17 @@ namespace Example\Storefront\Test\Unit\Cron {
             $subscriptionMock = $this->createMock(
                 SubscriptionInterface::class
             );
+            $currentDeliveryDate = '2026-05-01';
             $subscriptionMock->method('getSubscriptionId')->willReturn(1);
             $subscriptionMock->method('getCustomerId')->willReturn(100);
             $subscriptionMock->method('getProductId')->willReturn(42);
             $subscriptionMock->method('getCadence')->willReturn('monthly');
+            $subscriptionMock->method('getNextDeliveryDate')
+                ->willReturn($currentDeliveryDate);
 
             $expectedDate = date(
                 'Y-m-d',
-                strtotime('+30 days')
+                strtotime('+30 days', strtotime($currentDeliveryDate))
             );
             $subscriptionMock->expects($this->once())
                 ->method('setNextDeliveryDate')

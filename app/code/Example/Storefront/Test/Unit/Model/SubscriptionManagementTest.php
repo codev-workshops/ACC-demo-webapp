@@ -179,6 +179,9 @@ namespace Example\Storefront\Test\Unit\Model {
                 ->with(10)
                 ->willReturn($subscriptionMock);
 
+            $subscriptionMock->method('getStatus')
+                ->willReturn(SubscriptionInterface::STATUS_ACTIVE);
+
             $subscriptionMock->expects($this->once())
                 ->method('setStatus')
                 ->with(SubscriptionInterface::STATUS_PAUSED)
@@ -190,6 +193,27 @@ namespace Example\Storefront\Test\Unit\Model {
                 ->willReturn($subscriptionMock);
 
             $this->assertTrue($this->management->pauseSubscription(10));
+        }
+
+        /**
+         * Test that pausing a cancelled subscription throws.
+         *
+         * @return void
+         */
+        public function testPauseNonActiveSubscriptionThrows(): void
+        {
+            $subscriptionMock = $this->createMock(SubscriptionInterface::class);
+
+            $this->repositoryMock->expects($this->once())
+                ->method('getById')
+                ->with(10)
+                ->willReturn($subscriptionMock);
+
+            $subscriptionMock->method('getStatus')
+                ->willReturn(SubscriptionInterface::STATUS_CANCELLED);
+
+            $this->expectException(\InvalidArgumentException::class);
+            $this->management->pauseSubscription(10);
         }
 
         /**

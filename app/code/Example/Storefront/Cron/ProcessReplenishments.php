@@ -83,8 +83,9 @@ class ProcessReplenishments
 
             $cadence = $subscription->getCadence();
             $days = self::CADENCE_DAYS[$cadence] ?? 30;
+            $baseDate = strtotime($subscription->getNextDeliveryDate());
             $subscription->setNextDeliveryDate(
-                date('Y-m-d', strtotime(sprintf('+%d days', $days)))
+                date('Y-m-d', strtotime(sprintf('+%d days', $days), $baseDate))
             );
             $this->subscriptionRepository->save($subscription);
         }

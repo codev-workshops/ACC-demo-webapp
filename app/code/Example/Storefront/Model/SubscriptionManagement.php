@@ -115,6 +115,15 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     public function pauseSubscription(int $subscriptionId): bool
     {
         $subscription = $this->subscriptionRepository->getById($subscriptionId);
+        if ($subscription->getStatus() !== SubscriptionInterface::STATUS_ACTIVE) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Subscription %d cannot be paused because its status is "%s", not "active".',
+                    $subscriptionId,
+                    $subscription->getStatus()
+                )
+            );
+        }
         $subscription->setStatus(SubscriptionInterface::STATUS_PAUSED);
         $this->subscriptionRepository->save($subscription);
         return true;
