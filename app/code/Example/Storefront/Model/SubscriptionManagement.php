@@ -126,6 +126,15 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     public function resumeSubscription(int $subscriptionId): bool
     {
         $subscription = $this->subscriptionRepository->getById($subscriptionId);
+        if ($subscription->getStatus() !== SubscriptionInterface::STATUS_PAUSED) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Subscription %d cannot be resumed because its status is "%s", not "paused".',
+                    $subscriptionId,
+                    $subscription->getStatus()
+                )
+            );
+        }
         $subscription->setStatus(SubscriptionInterface::STATUS_ACTIVE);
         $subscription->setNextDeliveryDate(
             $this->computeNextDeliveryDate($subscription->getCadence())
