@@ -6,8 +6,8 @@
          failOnWarning="true"
          failOnRisky="true">
     <testsuites>
-        <testsuite name="Nestle Demo Unit Tests">
-            <directory>app/code/Nestle/Demo/Test/Unit</directory>
+        <testsuite name="Storefront Unit Tests">
+            <directory>app/code/Example/Storefront/Test/Unit</directory>
         </testsuite>
     </testsuites>
 </phpunit>

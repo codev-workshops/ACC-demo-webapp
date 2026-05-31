@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright © Nestlé S.A. All rights reserved.
+ * Copyright © Example Co. All rights reserved.
  */
 
 declare(strict_types=1);
 
-namespace Nestle\Demo\Api;
+namespace Example\Storefront\Api;
 
 /**
  * Service contract for building localized storefront greetings.

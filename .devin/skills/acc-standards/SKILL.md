@@ -1,6 +1,6 @@
 ---
-name: nestle-acc-standards
-description: Nestlé/Magento coding standards and how to fix Adobe Commerce (ACC) build failures
+name: acc-standards
+description: Magento coding standards and how to fix Adobe Commerce (ACC) build failures
 triggers:
   - user
   - model
@@ -11,7 +11,7 @@ allowed-tools:
   - exec
 ---
 
-You are working on the **Nestlé webapp module** for Adobe Commerce Cloud (Magento 2.4.7).
+You are working on the **storefront module** for Adobe Commerce Cloud (Magento 2.4.7).
 Apply the standards below to every change, validate locally before pushing, and when CI fails,
 use the diagnosis guide to fix it and re-push.
 
@@ -19,9 +19,9 @@ use the diagnosis guide to fix it and re-push.
 
 ## 1. Coding standards
 
-> REPLACE THIS SECTION with Nestlé's official coding-standards document when provided.
+> REPLACE THIS SECTION with your organization's official coding-standards document when provided.
 > The rules below are the Magento 2 baseline (enforced by `phpcs --standard=Magento2`) and are a
-> safe default until Nestlé's file is dropped in.
+> safe default until your standards file is dropped in.
 
 **PHP**
 - Start every PHP class file with `declare(strict_types=1);` after the file docblock.
@@ -35,11 +35,11 @@ use the diagnosis guide to fix it and re-push.
 - Lines ≤ 120 chars. No unused `use` statements. No `private`/`protected` members prefixed with `_`.
 
 **Module structure**
-- All code under `app/code/Nestle/<Module>/`. `registration.php` + `etc/module.xml` are required.
+- All code under `app/code/<Vendor>/<Module>/`. `registration.php` + `etc/module.xml` are required.
 - Configuration in `etc/` (`di.xml`, `events.xml`, `acl.xml`, …) using the correct XSD `schemaLocation`.
 - Tests under `Test/Unit/` (PHPUnit, no Magento bootstrap) — keep domain logic unit-testable.
 
-**Copyright** — every source file begins with the Nestlé copyright docblock.
+**Copyright** — every source file begins with the project copyright docblock.
 
 ---
 
@@ -72,7 +72,7 @@ bin/magento setup:di:compile
 **pass PHP lint and PHPCS but break the build** — exactly the failures that cause painful
 push→fail→fix round-trips. When CI Layer 2 is red, read the build log and match the error:
 
-**`Class "Nestle\Demo\...\X" does not exist`**
+**`Class "Example\Storefront\...\X" does not exist`**
 - A constructor type-hint, an `etc/di.xml` `<preference type="...">`, or an `<argument xsi:type="object">`
   references a class/interface that doesn't exist (typo, wrong namespace, or the class was never created).
 - Fix: correct the fully-qualified name, or create the missing class/interface.

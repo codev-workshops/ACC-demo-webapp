@@ -1,6 +1,6 @@
 {
-    "name": "nestle/webapp",
-    "description": "Nestlé webapp customizations for Adobe Commerce Cloud (demo module).",
+    "name": "example/storefront",
+    "description": "Example storefront customizations for Adobe Commerce Cloud (demo module).",
     "type": "magento2-module",
     "license": "proprietary",
     "require": {
@@ -13,7 +13,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Nestle\\Demo\\": "app/code/Nestle/Demo/"
+            "Example\\Storefront\\": "app/code/Example/Storefront/"
         }
     },
     "config": {

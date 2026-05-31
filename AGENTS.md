@@ -1,11 +1,11 @@
-# Nestlé Webapp — Agent Rules
+# Example Storefront — Agent Rules
 
-This repository is the **Nestlé webapp module** for Adobe Commerce Cloud (Magento 2.4.7).
-It contains **only** custom module code under `app/code/Nestle/`. Magento core lives on the
+This repository is the **storefront module** for Adobe Commerce Cloud (Magento 2.4.7).
+It contains **only** custom module code under `app/code/Example/`. Magento core lives on the
 ACC environment, not in this repo.
 
 ## Non-negotiables
-- Follow Magento 2 / Nestlé coding standards. Every PHP file: `declare(strict_types=1)`,
+- Follow Magento 2 coding standards. Every PHP file: `declare(strict_types=1)`,
   full parameter/return type hints, PHPDoc on every class and method, constructor dependency
   injection only — **never** use the ObjectManager directly.
 - **Before pushing**, run local validation and make it pass:
@@ -19,6 +19,6 @@ ACC environment, not in this repo.
   - Both layers must be green before merge.
 
 ## When CI fails
-Invoke the **`/nestle-acc-standards`** skill. It documents the coding standards in detail and
+Invoke the **`/acc-standards`** skill. It documents the coding standards in detail and
 explains how to diagnose and fix **ACC build (di:compile) failures** — the class of errors that
 pass local linting but break the Adobe Commerce build.

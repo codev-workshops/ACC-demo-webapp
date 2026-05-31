@@ -1,17 +1,17 @@
 <?php
 /**
- * Copyright © Nestlé S.A. All rights reserved.
+ * Copyright © Example Co. All rights reserved.
  */
 
 declare(strict_types=1);
 
-namespace Nestle\Demo\Model;
+namespace Example\Storefront\Model;
 
-use Nestle\Demo\Api\GreeterInterface;
+use Example\Storefront\Api\GreeterInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Default greeting builder for the Nestlé storefront.
+ * Default greeting builder for the storefront.
  */
 class Greeter implements GreeterInterface
 {
@@ -38,8 +38,8 @@ class Greeter implements GreeterInterface
             $name = 'Guest';
         }
 
-        $this->logger->info(sprintf('Nestlé greeting generated for "%s".', $name));
+        $this->logger->info(sprintf('Greeting generated for "%s".', $name));
 
-        return sprintf('Welcome to Nestlé, %s!', $name);
+        return sprintf('Welcome, %s!', $name);
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<ruleset name="Nestle ACC Coding Standard">
-    <description>Magento 2 coding standard enforced on the Nestlé webapp module.</description>
+<ruleset name="ACC Coding Standard">
+    <description>Magento 2 coding standard enforced on the storefront module.</description>
 
     <!-- Lint PHP, PHTML and XML sources -->
     <arg name="extensions" value="php,phtml,xml"/>

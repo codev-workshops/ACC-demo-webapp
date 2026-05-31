@@ -1,6 +1,6 @@
-# Nestlé Webapp (ACC demo)
+# Example Storefront (ACC demo)
 
-Custom **Magento 2** module (`Nestle_Demo`) representing the Nestlé webapp customizations that run
+Custom **Magento 2** module (`Example_Storefront`) representing the storefront customizations that run
 on **Adobe Commerce Cloud (ACC)**. This repo contains **only** the custom code — Magento core lives
 on the ACC environment. It demonstrates how **Devin** accelerates the build → validate → ship loop:
 Devin writes standards-compliant code, validates it, opens a PR, and when the ACC build fails Devin
@@ -9,17 +9,17 @@ reads the failed CI and fixes it automatically.
 ## Repository layout
 
 ```
-app/code/Nestle/Demo/       The webapp module (the "source")
-  Api/GreeterInterface.php   Service contract
-  Model/Greeter.php          Implementation (constructor DI)
-  etc/module.xml, di.xml      Module + DI wiring
-  Test/Unit/GreeterTest.php   Unit tests
-composer.json                Dev tooling (phpcs Magento2 standard, phpunit)
-phpcs.xml.dist               Coding-standards ruleset (Magento2)
-phpunit.xml.dist             Unit test config
-.github/workflows/ci.yml     CI pipeline (Layer 1 + Layer 2)
-AGENTS.md                    Always-on agent rules
-.devin/skills/...            Detailed standards + ACC fix-loop guidance
+app/code/Example/Storefront/   The storefront module (the "source")
+  Api/GreeterInterface.php      Service contract
+  Model/Greeter.php             Implementation (constructor DI)
+  etc/module.xml, di.xml         Module + DI wiring
+  Test/Unit/GreeterTest.php      Unit tests
+composer.json                   Dev tooling (phpcs Magento2 standard, phpunit)
+phpcs.xml.dist                  Coding-standards ruleset (Magento2)
+phpunit.xml.dist                Unit test config
+.github/workflows/ci.yml        CI pipeline (Layer 1 + Layer 2)
+AGENTS.md                       Always-on agent rules
+.devin/skills/...               Detailed standards + ACC fix-loop guidance
 ```
 
 ## Local validation (run before every push)
@@ -54,5 +54,5 @@ monitoring picks it up to fix and re-push.
 ## Coding standards
 
 Enforced via `phpcs --standard=Magento2`. The detailed standards and the ACC build fix-loop guidance
-live in the `nestle-acc-standards` skill (`.devin/skills/nestle-acc-standards/SKILL.md`). Replace the
-placeholder standards section with Nestlé's official document when available.
+live in the `acc-standards` skill (`.devin/skills/acc-standards/SKILL.md`). Replace the placeholder
+standards section with your organization's official document when available.

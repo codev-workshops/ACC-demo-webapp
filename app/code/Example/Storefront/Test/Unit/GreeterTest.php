@@ -1,13 +1,13 @@
 <?php
 /**
- * Copyright © Nestlé S.A. All rights reserved.
+ * Copyright © Example Co. All rights reserved.
  */
 
 declare(strict_types=1);
 
-namespace Nestle\Demo\Test\Unit;
+namespace Example\Storefront\Test\Unit;
 
-use Nestle\Demo\Model\Greeter;
+use Example\Storefront\Model\Greeter;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
@@ -26,7 +26,7 @@ class GreeterTest extends TestCase
         $logger = $this->createMock(LoggerInterface::class);
         $greeter = new Greeter($logger);
 
-        $this->assertSame('Welcome to Nestlé, Marie!', $greeter->getGreeting('Marie'));
+        $this->assertSame('Welcome, Marie!', $greeter->getGreeting('Marie'));
     }
 
     /**
@@ -39,6 +39,6 @@ class GreeterTest extends TestCase
         $logger = $this->createMock(LoggerInterface::class);
         $greeter = new Greeter($logger);
 
-        $this->assertSame('Welcome to Nestlé, Guest!', $greeter->getGreeting('   '));
+        $this->assertSame('Welcome, Guest!', $greeter->getGreeting('   '));
     }
 }
