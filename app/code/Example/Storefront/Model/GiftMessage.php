@@ -45,8 +45,10 @@ class GiftMessage
      */
     public function saveMessage(string $message): void
     {
-        $this->repository->save($message);
+        $trimmed = trim($message);
 
-        $this->logger->info(sprintf('Gift message saved: "%s".', trim($message)));
+        $this->repository->save($trimmed);
+
+        $this->logger->info(sprintf('Gift message saved: "%s".', $trimmed));
     }
 }
