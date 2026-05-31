@@ -1,0 +1,19 @@
+{
+    "example_storefront_banner": {
+        "column": {
+            "banner_id": true,
+            "title": true,
+            "subtitle": true,
+            "image_url": true,
+            "cta_label": true,
+            "cta_link": true,
+            "sort_order": true,
+            "is_active": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}
