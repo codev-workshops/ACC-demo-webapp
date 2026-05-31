@@ -17,7 +17,7 @@ class FreeShippingMessage implements FreeShippingMessageInterface
     /**
      * Order subtotal (in whole currency units) required to qualify for free shipping.
      */
-    private const THRESHOLD = 100;
+    private const THRESHOLD = 75;
 
     /**
      * @inheritDoc
