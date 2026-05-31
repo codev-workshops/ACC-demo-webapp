@@ -40,7 +40,7 @@ class DeliveryEstimate implements DeliveryEstimateInterface
     /**
      * @inheritDoc
      */
-    public function getEstimate(string $sku): int
+    public function getEstimate(string $sku): string
     {
         $businessDays = $this->countBusinessDays(self::LEAD_TIME_DAYS);
 
@@ -48,7 +48,7 @@ class DeliveryEstimate implements DeliveryEstimateInterface
             sprintf('Delivery estimate for SKU "%s": %d business day(s).', trim($sku), $businessDays)
         );
 
-        return $businessDays;
+        return sprintf('Arrives in %d business day%s', $businessDays, $businessDays === 1 ? '' : 's');
     }
 
     /**
