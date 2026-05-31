@@ -10,4 +10,6 @@
                 type="Example\Storefront\Model\Greeter"/>
     <preference for="Example\Storefront\Api\CatalogBadgeInterface"
                 type="Example\Storefront\Model\CatalogBadge"/>
+    <preference for="Example\Storefront\Api\StockResolverInterface"
+                type="Example\Storefront\Model\StockResolver"/>
 </config>
