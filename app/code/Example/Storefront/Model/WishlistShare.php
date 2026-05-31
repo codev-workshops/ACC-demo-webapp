@@ -8,6 +8,8 @@ declare(strict_types=1);
 namespace Example\Storefront\Model;
 
 use Example\Storefront\Api\WishlistShareInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Phrase;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -47,5 +49,17 @@ class WishlistShare implements WishlistShareInterface
         );
 
         return true;
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * @throws LocalizedException Always, until the shareable-link channel is implemented.
+     */
+    public function getShareUrl(): string
+    {
+        throw new LocalizedException(
+            new Phrase('Public shareable wishlist links are not yet available.')
+        );
     }
 }
