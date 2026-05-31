@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<ruleset name="Nestle ACC Coding Standard">
+    <description>Magento 2 coding standard enforced on the Nestlé webapp module.</description>
+
+    <!-- Lint PHP, PHTML and XML sources -->
+    <arg name="extensions" value="php,phtml,xml"/>
+    <arg name="colors"/>
+    <arg value="sp"/>
+
+    <!-- Scope: only our custom module code -->
+    <file>app/code</file>
+
+    <!-- Tests follow the same standards but skip a few noise rules -->
+    <exclude-pattern>*/Test/*</exclude-pattern>
+
+    <!-- The full Magento 2 coding standard (installed via composer) -->
+    <rule ref="Magento2">
+        <!-- We only lint PHP/XML here; silence the deprecated CSS/Less/GraphQL sniffs -->
+        <exclude name="Magento2.Less"/>
+        <exclude name="Magento2.GraphQL"/>
+        <exclude name="Squiz.CSS.NamedColours"/>
+    </rule>
+</ruleset>

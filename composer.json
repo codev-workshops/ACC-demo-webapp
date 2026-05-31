@@ -1,0 +1,24 @@
+{
+    "name": "nestle/webapp",
+    "description": "Nestlé webapp customizations for Adobe Commerce Cloud (demo module).",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "require": {
+        "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
+        "psr/log": "^3.0"
+    },
+    "require-dev": {
+        "magento/magento-coding-standard": "^40",
+        "phpunit/phpunit": "^9.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nestle\\Demo\\": "app/code/Nestle/Demo/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}
