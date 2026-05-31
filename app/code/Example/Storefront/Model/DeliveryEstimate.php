@@ -13,15 +13,16 @@ use Psr\Log\LoggerInterface;
 /**
  * Default delivery estimate provider for the storefront.
  *
- * For this first version the estimate is based on the number of business days
- * (Monday–Friday) between today and the projected delivery date.
+ * For this first version the estimate is based on a fixed business-day
+ * (Monday–Friday) lead time. The projected delivery date skips weekends, and
+ * the human-readable estimate reports the number of business days until it.
  */
 class DeliveryEstimate implements DeliveryEstimateInterface
 {
     /**
      * Number of business days the warehouse needs to dispatch and deliver.
      */
-    private const DEFAULT_LEAD_DAYS = 5;
+    private const DEFAULT_LEAD_BUSINESS_DAYS = 5;
 
     /**
      * @var LoggerInterface
@@ -39,36 +40,42 @@ class DeliveryEstimate implements DeliveryEstimateInterface
     /**
      * @inheritDoc
      */
-    public function getEstimate(string $sku): int
+    public function getEstimate(string $sku): string
     {
-        $businessDays = $this->countBusinessDays(self::DEFAULT_LEAD_DAYS);
+        $businessDays = self::DEFAULT_LEAD_BUSINESS_DAYS;
+        $deliveryDate = $this->projectDeliveryDate($businessDays);
 
-        $this->logger->info(
-            sprintf('Delivery estimate for SKU "%s": %d business day(s).', $sku, $businessDays)
-        );
+        $this->logger->info(sprintf(
+            'Delivery estimate for SKU "%s": %d business day(s), arriving by %s.',
+            $sku,
+            $businessDays,
+            $deliveryDate->format('Y-m-d')
+        ));
 
-        return $businessDays;
+        return sprintf('Arrives in %d business %s', $businessDays, $businessDays === 1 ? 'day' : 'days');
     }
 
     /**
-     * Count the business days (Monday–Friday) within the given lead window.
+     * Project the delivery date by advancing the given number of business days.
      *
-     * @param int $leadDays
-     * @return int
+     * Weekends (Saturday/Sunday) are skipped, so the result is always exactly
+     * $businessDays business days ahead of today regardless of the start day.
+     *
+     * @param int $businessDays
+     * @return \DateTimeImmutable
      */
-    private function countBusinessDays(int $leadDays): int
+    private function projectDeliveryDate(int $businessDays): \DateTimeImmutable
     {
-        $businessDays = 0;
+        $counted = 0;
         $cursor = new \DateTimeImmutable('today');
 
-        for ($offset = 1; $offset <= $leadDays; $offset++) {
+        while ($counted < $businessDays) {
             $cursor = $cursor->modify('+1 day');
-            $weekday = (int) $cursor->format('N');
-            if ($weekday < 6) {
-                $businessDays++;
+            if ((int) $cursor->format('N') < 6) {
+                $counted++;
             }
         }
 
-        return $businessDays;
+        return $cursor;
     }
 }
