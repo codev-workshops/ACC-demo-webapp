@@ -72,22 +72,35 @@ class ProcessReplenishments
         $results = $this->subscriptionRepository->getList($searchCriteria);
 
         foreach ($results->getItems() as $subscription) {
-            $this->logger->info(
-                sprintf(
-                    'Replenishment due: subscription=%d, customer=%d, product=%d',
-                    $subscription->getSubscriptionId(),
-                    $subscription->getCustomerId(),
-                    $subscription->getProductId()
-                )
-            );
+            try {
+                $this->logger->info(
+                    sprintf(
+                        'Replenishment due: subscription=%d, customer=%d, product=%d',
+                        $subscription->getSubscriptionId(),
+                        $subscription->getCustomerId(),
+                        $subscription->getProductId()
+                    )
+                );
 
-            $cadence = $subscription->getCadence();
-            $days = self::CADENCE_DAYS[$cadence] ?? 30;
-            $baseDate = strtotime($subscription->getNextDeliveryDate());
-            $subscription->setNextDeliveryDate(
-                date('Y-m-d', strtotime(sprintf('+%d days', $days), $baseDate))
-            );
-            $this->subscriptionRepository->save($subscription);
+                $cadence = $subscription->getCadence();
+                $days = self::CADENCE_DAYS[$cadence] ?? 30;
+                $baseDate = strtotime($subscription->getNextDeliveryDate());
+                $subscription->setNextDeliveryDate(
+                    date(
+                        'Y-m-d',
+                        strtotime(sprintf('+%d days', $days), $baseDate)
+                    )
+                );
+                $this->subscriptionRepository->save($subscription);
+            } catch (\Exception $e) {
+                $this->logger->error(
+                    sprintf(
+                        'Failed to process subscription %d: %s',
+                        $subscription->getSubscriptionId(),
+                        $e->getMessage()
+                    )
+                );
+            }
         }
     }
 }

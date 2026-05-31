@@ -239,5 +239,63 @@ namespace Example\Storefront\Test\Unit\Cron {
 
             $this->cron->execute();
         }
+
+        /**
+         * Test that a save failure does not stop processing remaining items.
+         *
+         * @return void
+         */
+        public function testExecuteContinuesOnSaveFailure(): void
+        {
+            $searchCriteriaMock = $this->createMock(
+                SearchCriteriaInterface::class
+            );
+
+            $this->searchCriteriaBuilderMock
+                ->method('addFilter')
+                ->willReturnSelf();
+            $this->searchCriteriaBuilderMock->method('create')
+                ->willReturn($searchCriteriaMock);
+
+            $sub1 = $this->createMock(SubscriptionInterface::class);
+            $sub1->method('getSubscriptionId')->willReturn(1);
+            $sub1->method('getCustomerId')->willReturn(100);
+            $sub1->method('getProductId')->willReturn(42);
+            $sub1->method('getCadence')->willReturn('weekly');
+            $sub1->method('getNextDeliveryDate')->willReturn('2026-05-01');
+            $sub1->method('setNextDeliveryDate')->willReturnSelf();
+
+            $sub2 = $this->createMock(SubscriptionInterface::class);
+            $sub2->method('getSubscriptionId')->willReturn(2);
+            $sub2->method('getCustomerId')->willReturn(200);
+            $sub2->method('getProductId')->willReturn(43);
+            $sub2->method('getCadence')->willReturn('monthly');
+            $sub2->method('getNextDeliveryDate')->willReturn('2026-05-01');
+            $sub2->method('setNextDeliveryDate')->willReturnSelf();
+
+            $searchResultsMock = $this->createMock(
+                SearchResultsInterface::class
+            );
+            $searchResultsMock->method('getItems')
+                ->willReturn([$sub1, $sub2]);
+
+            $this->repositoryMock->method('getList')
+                ->willReturn($searchResultsMock);
+
+            $this->repositoryMock->method('save')
+                ->willReturnCallback(
+                    function ($sub) {
+                        if ($sub->getSubscriptionId() === 1) {
+                            throw new \RuntimeException('DB error');
+                        }
+                        return $sub;
+                    }
+                );
+
+            $this->loggerMock->expects($this->once())
+                ->method('error');
+
+            $this->cron->execute();
+        }
     }
 }
