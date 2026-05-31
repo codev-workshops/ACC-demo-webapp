@@ -47,4 +47,14 @@ class WishlistShare implements WishlistShareInterface
 
         return true;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getShareUrl(): string
+    {
+        // Public shareable-link generation is planned and not yet available;
+        // return an empty string until it is implemented.
+        return '';
+    }
 }
