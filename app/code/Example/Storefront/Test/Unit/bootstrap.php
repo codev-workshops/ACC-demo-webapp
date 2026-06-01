@@ -326,6 +326,18 @@ if (!class_exists(\Magento\Framework\Api\SearchCriteriaBuilder::class)) {
         }
 
         /**
+         * Add filters as an OR group.
+         *
+         * @param array $filters
+         * @return $this
+         * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+         */
+        public function addFilters(array $filters)
+        {
+            return $this;
+        }
+
+        /**
          * Create search criteria.
          *
          * @return \Magento\Framework\Api\SearchCriteriaInterface
@@ -928,6 +940,181 @@ if (!class_exists(
     class_alias(
         'ExampleStorefrontApiDataBannerSearchResultsInterfaceFactory',
         'Example\Storefront\Api\Data\BannerSearchResultsInterfaceFactory'
+    );
+}
+
+// --- Filter / FilterBuilder ------------------------------------------------
+
+if (!class_exists(\Magento\Framework\Api\Filter::class)) {
+    /**
+     * Stub for Magento\Framework\Api\Filter.
+     */
+    class MagentoFrameworkApiFilter
+    {
+        /**
+         * @var string
+         */
+        private string $field = '';
+
+        /**
+         * @var mixed
+         */
+        private $value;
+
+        /**
+         * @var string
+         */
+        private string $conditionType = 'eq';
+
+        /**
+         * Get field.
+         *
+         * @return string
+         */
+        public function getField(): string
+        {
+            return $this->field;
+        }
+
+        /**
+         * Set field.
+         *
+         * @param string $field
+         * @return $this
+         */
+        public function setField(string $field)
+        {
+            $this->field = $field;
+            return $this;
+        }
+
+        /**
+         * Get value.
+         *
+         * @return mixed
+         */
+        public function getValue()
+        {
+            return $this->value;
+        }
+
+        /**
+         * Set value.
+         *
+         * @param mixed $value
+         * @return $this
+         */
+        public function setValue($value)
+        {
+            $this->value = $value;
+            return $this;
+        }
+
+        /**
+         * Get condition type.
+         *
+         * @return string
+         */
+        public function getConditionType(): string
+        {
+            return $this->conditionType;
+        }
+
+        /**
+         * Set condition type.
+         *
+         * @param string $conditionType
+         * @return $this
+         */
+        public function setConditionType(string $conditionType)
+        {
+            $this->conditionType = $conditionType;
+            return $this;
+        }
+    }
+    class_alias(
+        'MagentoFrameworkApiFilter',
+        'Magento\Framework\Api\Filter'
+    );
+}
+
+if (!class_exists(\Magento\Framework\Api\FilterBuilder::class)) {
+    /**
+     * Stub for Magento\Framework\Api\FilterBuilder.
+     */
+    class MagentoFrameworkApiFilterBuilder
+    {
+        /**
+         * @var string
+         */
+        private string $field = '';
+
+        /**
+         * @var mixed
+         */
+        private $value;
+
+        /**
+         * @var string
+         */
+        private string $conditionType = 'eq';
+
+        /**
+         * Set field.
+         *
+         * @param string $field
+         * @return $this
+         */
+        public function setField(string $field)
+        {
+            $this->field = $field;
+            return $this;
+        }
+
+        /**
+         * Set value.
+         *
+         * @param mixed $value
+         * @return $this
+         */
+        public function setValue($value)
+        {
+            $this->value = $value;
+            return $this;
+        }
+
+        /**
+         * Set condition type.
+         *
+         * @param string $conditionType
+         * @return $this
+         */
+        public function setConditionType(string $conditionType)
+        {
+            $this->conditionType = $conditionType;
+            return $this;
+        }
+
+        /**
+         * Create the filter.
+         *
+         * @return \Magento\Framework\Api\Filter
+         */
+        public function create(): \Magento\Framework\Api\Filter
+        {
+            $filter = new \Magento\Framework\Api\Filter();
+            $filter->setField($this->field);
+            $filter->setValue($this->value);
+            $filter->setConditionType($this->conditionType);
+            $this->field = '';
+            $this->value = null;
+            $this->conditionType = 'eq';
+            return $filter;
+        }
+    }
+    class_alias(
+        'MagentoFrameworkApiFilterBuilder',
+        'Magento\Framework\Api\FilterBuilder'
     );
 }
 

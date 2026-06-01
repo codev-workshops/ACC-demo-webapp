@@ -10,6 +10,7 @@ namespace Example\Storefront\ViewModel;
 use Example\Storefront\Api\BannerRepositoryInterface;
 use Example\Storefront\Api\Data\BannerInterface;
 use Example\Storefront\Model\BannerRepository;
+use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SortOrderBuilder;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
@@ -41,6 +42,11 @@ class HeroBannerViewModel implements ArgumentInterface
     private SortOrderBuilder $sortOrderBuilder;
 
     /**
+     * @var FilterBuilder
+     */
+    private FilterBuilder $filterBuilder;
+
+    /**
      * @var StoreManagerInterface
      */
     private StoreManagerInterface $storeManager;
@@ -49,17 +55,20 @@ class HeroBannerViewModel implements ArgumentInterface
      * @param BannerRepositoryInterface $bannerRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param SortOrderBuilder $sortOrderBuilder
+     * @param FilterBuilder $filterBuilder
      * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         BannerRepositoryInterface $bannerRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         SortOrderBuilder $sortOrderBuilder,
+        FilterBuilder $filterBuilder,
         StoreManagerInterface $storeManager
     ) {
         $this->bannerRepository = $bannerRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->sortOrderBuilder = $sortOrderBuilder;
+        $this->filterBuilder = $filterBuilder;
         $this->storeManager = $storeManager;
     }
 
@@ -92,10 +101,17 @@ class HeroBannerViewModel implements ArgumentInterface
             ->addSortOrder($sortOrder);
 
         if ($customerGroupId !== null) {
-            $this->searchCriteriaBuilder->addFilter(
-                BannerInterface::CUSTOMER_GROUP_ID,
-                [$customerGroupId, null],
-                'in'
+            $groupFilter = $this->filterBuilder
+                ->setField(BannerInterface::CUSTOMER_GROUP_ID)
+                ->setValue($customerGroupId)
+                ->setConditionType('eq')
+                ->create();
+            $nullFilter = $this->filterBuilder
+                ->setField(BannerInterface::CUSTOMER_GROUP_ID)
+                ->setConditionType('null')
+                ->create();
+            $this->searchCriteriaBuilder->addFilters(
+                [$groupFilter, $nullFilter]
             );
         }
 

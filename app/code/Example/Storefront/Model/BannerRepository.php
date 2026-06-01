@@ -274,15 +274,17 @@ class BannerRepository implements BannerRepositoryInterface
     private function extractItemData(BannerInterface $item): array
     {
         return [
-            BannerInterface::BANNER_ID        => $item->getBannerId(),
-            BannerInterface::TITLE            => $item->getTitle(),
-            BannerInterface::SUBTITLE         => $item->getSubtitle(),
-            BannerInterface::IMAGE_URL        => $item->getImageUrl(),
-            BannerInterface::CTA_LABEL        => $item->getCtaLabel(),
-            BannerInterface::CTA_LINK         => $item->getCtaLink(),
-            BannerInterface::SORT_ORDER       => $item->getSortOrder(),
-            BannerInterface::IS_ACTIVE        => $item->getIsActive(),
-            BannerInterface::STORE_ID         => $item->getStoreId(),
+            BannerInterface::BANNER_ID         => $item->getBannerId(),
+            BannerInterface::TITLE             => $item->getTitle(),
+            BannerInterface::SUBTITLE          => $item->getSubtitle(),
+            BannerInterface::IMAGE_URL         => $item->getImageUrl(),
+            BannerInterface::CTA_LABEL         => $item->getCtaLabel(),
+            BannerInterface::CTA_LINK          => $item->getCtaLink(),
+            BannerInterface::SORT_ORDER        => $item->getSortOrder(),
+            BannerInterface::IS_ACTIVE         => $item->getIsActive(),
+            BannerInterface::CREATED_AT        => $item->getCreatedAt(),
+            BannerInterface::UPDATED_AT        => $item->getUpdatedAt(),
+            BannerInterface::STORE_ID          => $item->getStoreId(),
             BannerInterface::CUSTOMER_GROUP_ID => $item->getCustomerGroupId(),
         ];
     }

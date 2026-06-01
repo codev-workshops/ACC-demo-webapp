@@ -11,6 +11,7 @@ use Example\Storefront\Api\BannerRepositoryInterface;
 use Example\Storefront\Api\Data\BannerInterface;
 use Example\Storefront\Api\Data\BannerSearchResultsInterface;
 use Example\Storefront\ViewModel\HeroBannerViewModel;
+use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Api\SortOrder;
@@ -41,6 +42,11 @@ class HeroBannerViewModelTest extends TestCase
     private $sortOrderBuilder;
 
     /**
+     * @var FilterBuilder|MockObject
+     */
+    private $filterBuilder;
+
+    /**
      * @var StoreManagerInterface|MockObject
      */
     private $storeManager;
@@ -62,6 +68,7 @@ class HeroBannerViewModelTest extends TestCase
             SearchCriteriaBuilder::class
         );
         $this->sortOrderBuilder = $this->createMock(SortOrderBuilder::class);
+        $this->filterBuilder = $this->createMock(FilterBuilder::class);
         $this->storeManager = $this->createMock(StoreManagerInterface::class);
 
         $store = $this->createMock(StoreInterface::class);
@@ -72,6 +79,7 @@ class HeroBannerViewModelTest extends TestCase
             $this->bannerRepository,
             $this->searchCriteriaBuilder,
             $this->sortOrderBuilder,
+            $this->filterBuilder,
             $this->storeManager
         );
     }
