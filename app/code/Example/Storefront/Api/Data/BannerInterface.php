@@ -25,8 +25,10 @@ interface BannerInterface
     public const CTA_LINK   = 'cta_link';
     public const SORT_ORDER = 'sort_order';
     public const IS_ACTIVE  = 'is_active';
-    public const CREATED_AT = 'created_at';
-    public const UPDATED_AT = 'updated_at';
+    public const CREATED_AT        = 'created_at';
+    public const UPDATED_AT        = 'updated_at';
+    public const STORE_ID          = 'store_id';
+    public const CUSTOMER_GROUP_ID = 'customer_group_id';
 
     /**
      * Get banner ID.
@@ -177,4 +179,34 @@ interface BannerInterface
      * @return self
      */
     public function setUpdatedAt(string $updatedAt): self;
+
+    /**
+     * Get store ID.
+     *
+     * @return int
+     */
+    public function getStoreId(): int;
+
+    /**
+     * Set store ID.
+     *
+     * @param int $storeId
+     * @return self
+     */
+    public function setStoreId(int $storeId): self;
+
+    /**
+     * Get customer group ID.
+     *
+     * @return int|null
+     */
+    public function getCustomerGroupId(): ?int;
+
+    /**
+     * Set customer group ID.
+     *
+     * @param int|null $customerGroupId
+     * @return self
+     */
+    public function setCustomerGroupId(?int $customerGroupId): self;
 }

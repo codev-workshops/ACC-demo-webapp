@@ -156,6 +156,32 @@ class BannerTest extends TestCase
             }
         );
 
+        $banner->method('getStoreId')->willReturnCallback(
+            function () use (&$store): int {
+                return (int) ($store[BannerInterface::STORE_ID] ?? 0);
+            }
+        );
+        $banner->method('setStoreId')->willReturnCallback(
+            function (int $v) use (&$store, $banner): BannerInterface {
+                $store[BannerInterface::STORE_ID] = $v;
+                return $banner;
+            }
+        );
+
+        $banner->method('getCustomerGroupId')->willReturnCallback(
+            function () use (&$store): ?int {
+                return isset($store[BannerInterface::CUSTOMER_GROUP_ID])
+                    ? (int) $store[BannerInterface::CUSTOMER_GROUP_ID]
+                    : null;
+            }
+        );
+        $banner->method('setCustomerGroupId')->willReturnCallback(
+            function (?int $v) use (&$store, $banner): BannerInterface {
+                $store[BannerInterface::CUSTOMER_GROUP_ID] = $v;
+                return $banner;
+            }
+        );
+
         return $banner;
     }
 
@@ -303,6 +329,52 @@ class BannerTest extends TestCase
     }
 
     /**
+     * Test store ID getter and setter.
+     *
+     * @return void
+     */
+    public function testStoreIdGetterSetter(): void
+    {
+        $banner = $this->createBannerStub();
+        $banner->setStoreId(2);
+        $this->assertSame(2, $banner->getStoreId());
+    }
+
+    /**
+     * Test store ID defaults to zero.
+     *
+     * @return void
+     */
+    public function testStoreIdDefaultsToZero(): void
+    {
+        $banner = $this->createBannerStub();
+        $this->assertSame(0, $banner->getStoreId());
+    }
+
+    /**
+     * Test customer group ID getter and setter.
+     *
+     * @return void
+     */
+    public function testCustomerGroupIdGetterSetter(): void
+    {
+        $banner = $this->createBannerStub();
+        $banner->setCustomerGroupId(3);
+        $this->assertSame(3, $banner->getCustomerGroupId());
+    }
+
+    /**
+     * Test customer group ID defaults to null.
+     *
+     * @return void
+     */
+    public function testCustomerGroupIdDefaultsToNull(): void
+    {
+        $banner = $this->createBannerStub();
+        $this->assertNull($banner->getCustomerGroupId());
+    }
+
+    /**
      * Test column-name constants are defined.
      *
      * @return void
@@ -319,5 +391,10 @@ class BannerTest extends TestCase
         $this->assertSame('is_active', BannerInterface::IS_ACTIVE);
         $this->assertSame('created_at', BannerInterface::CREATED_AT);
         $this->assertSame('updated_at', BannerInterface::UPDATED_AT);
+        $this->assertSame('store_id', BannerInterface::STORE_ID);
+        $this->assertSame(
+            'customer_group_id',
+            BannerInterface::CUSTOMER_GROUP_ID
+        );
     }
 }

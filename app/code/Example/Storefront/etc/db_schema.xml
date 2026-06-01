@@ -27,8 +27,30 @@
                 default="CURRENT_TIMESTAMP" comment="Created At"/>
         <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false"
                 default="CURRENT_TIMESTAMP" comment="Updated At"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" default="0"
+                comment="Store ID (0 = all stores)"/>
+        <column xsi:type="int" name="customer_group_id" unsigned="true" nullable="true"
+                comment="Customer Group ID (null = all groups)"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="banner_id"/>
         </constraint>
+        <index referenceId="EXAMPLE_STOREFRONT_BANNER_IS_ACTIVE"
+               indexType="btree">
+            <column name="is_active"/>
+        </index>
+        <index referenceId="EXAMPLE_STOREFRONT_BANNER_SORT_ORDER"
+               indexType="btree">
+            <column name="sort_order"/>
+        </index>
+        <index referenceId="EXAMPLE_STOREFRONT_BANNER_STORE_ID"
+               indexType="btree">
+            <column name="store_id"/>
+        </index>
+        <index referenceId="EXAMPLE_STOREFRONT_BANNER_ACTIVE_STORE_SORT"
+               indexType="btree">
+            <column name="is_active"/>
+            <column name="store_id"/>
+            <column name="sort_order"/>
+        </index>
     </table>
 </schema>

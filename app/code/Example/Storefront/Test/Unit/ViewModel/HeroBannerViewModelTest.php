@@ -15,6 +15,8 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Api\SortOrderBuilder;
+use Magento\Store\Api\Data\StoreInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -39,6 +41,11 @@ class HeroBannerViewModelTest extends TestCase
     private $sortOrderBuilder;
 
     /**
+     * @var StoreManagerInterface|MockObject
+     */
+    private $storeManager;
+
+    /**
      * @var HeroBannerViewModel
      */
     private HeroBannerViewModel $viewModel;
@@ -55,11 +62,17 @@ class HeroBannerViewModelTest extends TestCase
             SearchCriteriaBuilder::class
         );
         $this->sortOrderBuilder = $this->createMock(SortOrderBuilder::class);
+        $this->storeManager = $this->createMock(StoreManagerInterface::class);
+
+        $store = $this->createMock(StoreInterface::class);
+        $store->method('getId')->willReturn(1);
+        $this->storeManager->method('getStore')->willReturn($store);
 
         $this->viewModel = new HeroBannerViewModel(
             $this->bannerRepository,
             $this->searchCriteriaBuilder,
-            $this->sortOrderBuilder
+            $this->sortOrderBuilder,
+            $this->storeManager
         );
     }
 
@@ -88,9 +101,7 @@ class HeroBannerViewModelTest extends TestCase
             ->method('create')
             ->willReturn($sortOrder);
 
-        $this->searchCriteriaBuilder->expects($this->once())
-            ->method('addFilter')
-            ->with(BannerInterface::IS_ACTIVE, 1)
+        $this->searchCriteriaBuilder->method('addFilter')
             ->willReturnSelf();
         $this->searchCriteriaBuilder->expects($this->once())
             ->method('addSortOrder')

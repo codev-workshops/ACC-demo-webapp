@@ -13,6 +13,7 @@ use Example\Storefront\Api\Data\BannerSearchResultsInterfaceFactory;
 use Example\Storefront\Model\Banner;
 use Example\Storefront\Model\BannerFactory;
 use Example\Storefront\Model\BannerRepository;
+use Example\Storefront\Model\Cache\BannerCacheType;
 use Example\Storefront\Model\ResourceModel\Banner as BannerResource;
 use Example\Storefront\Model\ResourceModel\Banner\Collection;
 use Example\Storefront\Model\ResourceModel\Banner\CollectionFactory;
@@ -21,6 +22,7 @@ use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Serialize\SerializerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -55,6 +57,16 @@ class BannerRepositoryTest extends TestCase
     private $collectionProcessor;
 
     /**
+     * @var SerializerInterface|MockObject
+     */
+    private $serializer;
+
+    /**
+     * @var BannerCacheType|MockObject
+     */
+    private $cache;
+
+    /**
      * @var BannerRepository
      */
     private BannerRepository $repository;
@@ -73,13 +85,17 @@ class BannerRepositoryTest extends TestCase
         $this->collectionProcessor = $this->createMock(
             CollectionProcessorInterface::class
         );
+        $this->serializer = $this->createMock(SerializerInterface::class);
+        $this->cache = $this->createMock(BannerCacheType::class);
 
         $this->repository = new BannerRepository(
             $this->resource,
             $this->bannerFactory,
             $this->collectionFactory,
             $this->searchResultsFactory,
-            $this->collectionProcessor
+            $this->collectionProcessor,
+            $this->serializer,
+            $this->cache
         );
     }
 
@@ -98,6 +114,26 @@ class BannerRepositoryTest extends TestCase
             ->method('load')
             ->with($banner, 1);
 
+        $result = $this->repository->getById(1);
+        $this->assertSame($banner, $result);
+    }
+
+    /**
+     * Test getById returns cached banner from identity map.
+     *
+     * @return void
+     */
+    public function testGetByIdReturnsFromIdentityMap(): void
+    {
+        $banner = $this->createMock(Banner::class);
+        $banner->method('getBannerId')->willReturn(1);
+
+        $this->bannerFactory->method('create')->willReturn($banner);
+        $this->resource->expects($this->once())
+            ->method('load')
+            ->with($banner, 1);
+
+        $this->repository->getById(1);
         $result = $this->repository->getById(1);
         $this->assertSame($banner, $result);
     }
@@ -126,10 +162,14 @@ class BannerRepositoryTest extends TestCase
     public function testSaveReturnsBanner(): void
     {
         $banner = $this->createMock(Banner::class);
+        $banner->method('getBannerId')->willReturn(1);
 
         $this->resource->expects($this->once())
             ->method('save')
             ->with($banner);
+
+        $this->cache->expects($this->once())
+            ->method('clean');
 
         $result = $this->repository->save($banner);
         $this->assertSame($banner, $result);
@@ -159,10 +199,14 @@ class BannerRepositoryTest extends TestCase
     public function testDeleteReturnsTrue(): void
     {
         $banner = $this->createMock(Banner::class);
+        $banner->method('getBannerId')->willReturn(1);
 
         $this->resource->expects($this->once())
             ->method('delete')
             ->with($banner);
+
+        $this->cache->expects($this->once())
+            ->method('clean');
 
         $this->assertTrue($this->repository->delete($banner));
     }
@@ -192,7 +236,9 @@ class BannerRepositoryTest extends TestCase
     {
         $searchCriteria = $this->createMock(SearchCriteriaInterface::class);
         $collection = $this->createMock(Collection::class);
-        $searchResults = $this->createMock(BannerSearchResultsInterface::class);
+        $searchResults = $this->createMock(
+            BannerSearchResultsInterface::class
+        );
 
         $this->collectionFactory->method('create')->willReturn($collection);
         $this->collectionProcessor->expects($this->once())
@@ -216,6 +262,85 @@ class BannerRepositoryTest extends TestCase
             ->with(0);
 
         $result = $this->repository->getList($searchCriteria);
+        $this->assertSame($searchResults, $result);
+    }
+
+    /**
+     * Test getCachedList returns from cache on hit.
+     *
+     * @return void
+     */
+    public function testGetCachedListReturnsCacheHit(): void
+    {
+        $searchCriteria = $this->createMock(SearchCriteriaInterface::class);
+        $searchResults = $this->createMock(
+            BannerSearchResultsInterface::class
+        );
+        $banner = $this->createMock(Banner::class);
+
+        $cachedData = [
+            'items' => [
+                [
+                    'banner_id' => 1,
+                    'title' => 'Test',
+                    'store_id' => 0,
+                ],
+            ],
+            'total_count' => 1,
+        ];
+
+        $this->cache->method('load')
+            ->willReturn('serialized');
+        $this->serializer->method('unserialize')
+            ->with('serialized')
+            ->willReturn($cachedData);
+
+        $this->bannerFactory->method('create')->willReturn($banner);
+        $this->searchResultsFactory->method('create')
+            ->willReturn($searchResults);
+
+        $searchResults->expects($this->once())
+            ->method('setSearchCriteria')
+            ->with($searchCriteria);
+        $searchResults->expects($this->once())
+            ->method('setTotalCount')
+            ->with(1);
+
+        $result = $this->repository->getCachedList(0, null, $searchCriteria);
+        $this->assertSame($searchResults, $result);
+    }
+
+    /**
+     * Test getCachedList populates cache on miss.
+     *
+     * @return void
+     */
+    public function testGetCachedListPopulatesCacheOnMiss(): void
+    {
+        $searchCriteria = $this->createMock(SearchCriteriaInterface::class);
+        $collection = $this->createMock(Collection::class);
+        $searchResults = $this->createMock(
+            BannerSearchResultsInterface::class
+        );
+
+        $this->cache->method('load')->willReturn(false);
+
+        $this->collectionFactory->method('create')->willReturn($collection);
+        $this->collectionProcessor->method('process');
+        $collection->method('getItems')->willReturn([]);
+        $collection->method('getSize')->willReturn(0);
+
+        $this->searchResultsFactory->method('create')
+            ->willReturn($searchResults);
+        $searchResults->method('getItems')->willReturn([]);
+        $searchResults->method('getTotalCount')->willReturn(0);
+
+        $this->serializer->expects($this->once())
+            ->method('serialize');
+        $this->cache->expects($this->once())
+            ->method('save');
+
+        $result = $this->repository->getCachedList(1, null, $searchCriteria);
         $this->assertSame($searchResults, $result);
     }
 }

@@ -593,6 +593,233 @@ if (!interface_exists(
     );
 }
 
+// --- Serializer layer ------------------------------------------------------
+
+if (!interface_exists(\Magento\Framework\Serialize\SerializerInterface::class)) {
+    /**
+     * Stub for SerializerInterface.
+     */
+    interface MagentoFrameworkSerializeSerializerInterface
+    {
+        /**
+         * Serialize.
+         *
+         * @param mixed $data
+         * @return string
+         */
+        public function serialize($data): string;
+
+        /**
+         * Unserialize.
+         *
+         * @param string $string
+         * @return mixed
+         */
+        public function unserialize(string $string);
+    }
+    class_alias(
+        'MagentoFrameworkSerializeSerializerInterface',
+        'Magento\Framework\Serialize\SerializerInterface'
+    );
+}
+
+// --- Store layer -----------------------------------------------------------
+
+if (!interface_exists(\Magento\Store\Model\StoreManagerInterface::class)) {
+    /**
+     * Stub for StoreManagerInterface.
+     */
+    interface MagentoStoreModelStoreManagerInterface
+    {
+        /**
+         * Get store.
+         *
+         * @return \Magento\Store\Api\Data\StoreInterface
+         */
+        public function getStore();
+    }
+    class_alias(
+        'MagentoStoreModelStoreManagerInterface',
+        'Magento\Store\Model\StoreManagerInterface'
+    );
+}
+
+if (!interface_exists(\Magento\Store\Api\Data\StoreInterface::class)) {
+    /**
+     * Stub for StoreInterface.
+     */
+    interface MagentoStoreApiDataStoreInterface
+    {
+        /**
+         * Get store ID.
+         *
+         * @return int
+         */
+        public function getId();
+    }
+    class_alias(
+        'MagentoStoreApiDataStoreInterface',
+        'Magento\Store\Api\Data\StoreInterface'
+    );
+}
+
+// --- Cache layer -----------------------------------------------------------
+
+if (!class_exists(\Magento\Framework\App\Cache\Type\FrontendPool::class)) {
+    /**
+     * Stub for FrontendPool.
+     */
+    class MagentoFrameworkAppCacheTypeFrontendPool
+    {
+        /**
+         * Get frontend.
+         *
+         * @param string $identifier
+         * @return \Magento\Framework\Cache\FrontendInterface
+         * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+         */
+        public function get(string $identifier)
+        {
+            return null;
+        }
+    }
+    class_alias(
+        'MagentoFrameworkAppCacheTypeFrontendPool',
+        'Magento\Framework\App\Cache\Type\FrontendPool'
+    );
+}
+
+if (!interface_exists(\Magento\Framework\Cache\FrontendInterface::class)) {
+    /**
+     * Stub for cache FrontendInterface.
+     */
+    interface MagentoFrameworkCacheFrontendInterface
+    {
+        /**
+         * Load.
+         *
+         * @param string $identifier
+         * @return string|false
+         */
+        public function load(string $identifier);
+
+        /**
+         * Save.
+         *
+         * @param string $data
+         * @param string $identifier
+         * @param array $tags
+         * @param int|null $lifeTime
+         * @return bool
+         */
+        public function save(
+            string $data,
+            string $identifier,
+            array $tags = [],
+            ?int $lifeTime = null
+        ): bool;
+
+        /**
+         * Remove.
+         *
+         * @param string $identifier
+         * @return bool
+         */
+        public function remove(string $identifier): bool;
+
+        /**
+         * Clean.
+         *
+         * @param string $mode
+         * @param array $tags
+         * @return bool
+         */
+        public function clean(string $mode, array $tags = []): bool;
+    }
+    class_alias(
+        'MagentoFrameworkCacheFrontendInterface',
+        'Magento\Framework\Cache\FrontendInterface'
+    );
+}
+
+if (!class_exists(\Magento\Framework\Cache\Frontend\Decorator\TagScope::class)) {
+    /**
+     * Stub for TagScope.
+     */
+    class MagentoFrameworkCacheFrontendDecoratorTagScope
+    {
+        /**
+         * @var \Magento\Framework\Cache\FrontendInterface|null
+         */
+        private $frontend;
+
+        /**
+         * @var string
+         */
+        private string $tag;
+
+        /**
+         * Constructor.
+         *
+         * @param \Magento\Framework\Cache\FrontendInterface|null $frontend
+         * @param string $tag
+         */
+        public function __construct($frontend = null, string $tag = '')
+        {
+            $this->frontend = $frontend;
+            $this->tag = $tag;
+        }
+
+        /**
+         * Load.
+         *
+         * @param string $identifier
+         * @return string|false
+         * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+         */
+        public function load(string $identifier)
+        {
+            return false;
+        }
+
+        /**
+         * Save.
+         *
+         * @param string $data
+         * @param string $identifier
+         * @param array $tags
+         * @param int|null $lifeTime
+         * @return bool
+         * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+         */
+        public function save(
+            string $data,
+            string $identifier,
+            array $tags = [],
+            ?int $lifeTime = null
+        ): bool {
+            return true;
+        }
+
+        /**
+         * Clean.
+         *
+         * @param string $mode
+         * @param array $tags
+         * @return bool
+         * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+         */
+        public function clean(string $mode = '', array $tags = []): bool
+        {
+            return true;
+        }
+    }
+    class_alias(
+        'MagentoFrameworkCacheFrontendDecoratorTagScope',
+        'Magento\Framework\Cache\Frontend\Decorator\TagScope'
+    );
+}
+
 // --- Component registrar ---------------------------------------------------
 
 if (!class_exists(\Magento\Framework\Component\ComponentRegistrar::class)) {

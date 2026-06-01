@@ -187,4 +187,37 @@ class Banner extends AbstractModel implements BannerInterface
     {
         return $this->setData(self::UPDATED_AT, $updatedAt);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getStoreId(): int
+    {
+        return (int) $this->getData(self::STORE_ID);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setStoreId(int $storeId): BannerInterface
+    {
+        return $this->setData(self::STORE_ID, $storeId);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCustomerGroupId(): ?int
+    {
+        $value = $this->getData(self::CUSTOMER_GROUP_ID);
+        return $value !== null ? (int) $value : null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setCustomerGroupId(?int $customerGroupId): BannerInterface
+    {
+        return $this->setData(self::CUSTOMER_GROUP_ID, $customerGroupId);
+    }
 }

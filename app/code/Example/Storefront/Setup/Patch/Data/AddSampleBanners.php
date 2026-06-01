@@ -47,6 +47,7 @@ class AddSampleBanners implements DataPatchInterface
                 'cta_link'   => '/brands',
                 'sort_order' => 1,
                 'is_active'  => 1,
+                'store_id'   => 0,
             ],
             [
                 'title'      => 'Nutrition & Wellness',
@@ -56,6 +57,7 @@ class AddSampleBanners implements DataPatchInterface
                 'cta_link'   => '/nutrition',
                 'sort_order' => 2,
                 'is_active'  => 1,
+                'store_id'   => 0,
             ],
             [
                 'title'      => 'Sustainability Promise',
@@ -65,6 +67,7 @@ class AddSampleBanners implements DataPatchInterface
                 'cta_link'   => '/sustainability',
                 'sort_order' => 3,
                 'is_active'  => 1,
+                'store_id'   => 0,
             ],
         ];
 
