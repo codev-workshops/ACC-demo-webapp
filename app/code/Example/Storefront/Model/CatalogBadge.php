@@ -52,7 +52,7 @@ class CatalogBadge implements CatalogBadgeInterface
             }
         }
 
-        $this->logger->info(
+        $this->logger->debug(
             sprintf(
                 'CatalogBadge: product %d resolved %d badge(s).',
                 $productId,

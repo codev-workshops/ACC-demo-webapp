@@ -80,7 +80,7 @@ class CatalogBadgeTest extends TestCase
 
         $logger = $this->createMock(LoggerInterface::class);
         $logger->expects($this->once())
-            ->method('info')
+            ->method('debug')
             ->with($this->stringContains('1 badge(s)'));
 
         $service = new CatalogBadge($logger, [$rule]);
