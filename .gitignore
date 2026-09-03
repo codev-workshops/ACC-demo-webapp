@@ -1,0 +1,14 @@
+# Composer
+/vendor/
+composer.lock
+
+# PHPUnit
+.phpunit.result.cache
+/.phpunit.cache/
+
+# Tooling caches
+/.phpcs.cache
+
+# OS / editor
+.DS_Store
+*.swp

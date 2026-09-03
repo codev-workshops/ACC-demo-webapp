@@ -1,0 +1,53 @@
+name: ACC CI
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Layer 1 - Code validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer:v2
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress
+
+      - name: PHP lint
+        run: find app/code -name '*.php' -print0 | xargs -0 -n1 -P4 php -l
+
+      - name: Coding standards (PHPCS Magento2)
+        run: vendor/bin/phpcs --standard=phpcs.xml.dist
+
+      - name: Unit tests
+        run: vendor/bin/phpunit --configuration phpunit.xml.dist
+
+  acc-build:
+    name: Layer 2 - ACC build (real Magento)
+    needs: validate
+    runs-on: ubuntu-latest
+    # One shared Magento on the ACC environment -> never run two builds at once.
+    concurrency:
+      group: acc-build-environment
+      cancel-in-progress: false
+    steps:
+      - name: Deploy module and run Magento build on the ACC environment
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          command_timeout: 30m
+          script: |
+            /home/ubuntu/acc-demo/platform/scripts/acc-build.sh "${{ github.event.pull_request.head.sha || github.sha }}"
